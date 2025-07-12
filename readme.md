@@ -1,4 +1,5 @@
-# Go straight to Sense75 Keymap [Sense75](./keyboards/drop/sense75/keymaps/cods4)
+# Go straight to my Keymaps 
+[Sense75](./keyboards/drop/sense75/keymaps/cods4/keymap.c)
 
 
 
