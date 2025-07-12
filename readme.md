@@ -3,10 +3,20 @@
 [Sense75](./keyboards/drop/sense75/keymaps/cods4/keymap.c)
 ## How to flash keyboard
 https://docs.qmk.fm/newbs_getting_started#set-up-qmk
+qmk setup
 ``` bash
 qmk setup cods4/qmk_firmware
 ```
+compile
+``` bash
+qmk compile -kb drop/sense75 -km cods4
+```
+to put keyboard into bootload mode, hold Fn + Backspace for half a second
 
+flash firmware
+```
+qmk flash -kb drop/sense75 -km cods4
+```
 
 # Quantum Mechanical Keyboard Firmware
 
