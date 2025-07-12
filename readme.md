@@ -1,6 +1,11 @@
-# Go straight to my Keymaps 
+# Notes
+## Go straight to my Keymaps 
 [Sense75](./keyboards/drop/sense75/keymaps/cods4/keymap.c)
-
+## How to flash keyboard
+https://docs.qmk.fm/newbs_getting_started#set-up-qmk
+``` bash
+qmk setup <github_username>/qmk_firmware
+```
 
 
 # Quantum Mechanical Keyboard Firmware
