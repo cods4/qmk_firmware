@@ -1,3 +1,7 @@
+# Go straight to Sense75 Keymap [Sense75](./keyboards/drop/sense75/keymaps/cods4)
+
+
+
 # Quantum Mechanical Keyboard Firmware
 
 [![Current Version](https://img.shields.io/github/tag/qmk/qmk_firmware.svg)](https://github.com/qmk/qmk_firmware/tags)
