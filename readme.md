@@ -4,7 +4,7 @@
 ## How to flash keyboard
 https://docs.qmk.fm/newbs_getting_started#set-up-qmk
 ``` bash
-qmk setup <github_username>/qmk_firmware
+qmk setup cods4/qmk_firmware
 ```
 
 
