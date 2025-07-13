@@ -1,6 +1,9 @@
 # Notes
 ## Go straight to my Keymaps 
 [Sense75](./keyboards/drop/sense75/keymaps/cods4)
+## View Keymaps here
+[Sense75 Layer 0](https://www.keyboard-layout-editor.com/#/gists/8c9818afe0c2f749f4db07a7f40d7aab)
+[Sense75 Layer 1](https://www.keyboard-layout-editor.com/#/gists/611d1b84910d4c6674c0a1da5812ab8d)
 ## How to flash keyboard
 https://docs.qmk.fm/newbs_getting_started#set-up-qmk
 qmk setup
