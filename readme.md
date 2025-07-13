@@ -1,6 +1,6 @@
 # Notes
 ## Go straight to my Keymaps 
-[Sense75](./keyboards/drop/sense75/keymaps/cods4/keymap.c)
+[Sense75](./keyboards/drop/sense75/keymaps/cods4)
 ## How to flash keyboard
 https://docs.qmk.fm/newbs_getting_started#set-up-qmk
 qmk setup
