@@ -2,7 +2,7 @@
 
 // Set a specific startup mode
 // A list of modes can be found in the QMK docs for "RGB Matrix Effects"
-//#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_TYPING_HEATMAP
+#define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_TYPING_HEATMAP
 //#define ENABLE_RGB_MATRIX_BREATHING
 
 // Set a startup color (hue, saturation, value)
