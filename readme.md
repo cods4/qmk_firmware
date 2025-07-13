@@ -4,6 +4,7 @@
 ## View Keymaps here
 [Sense75 Layer 0](https://www.keyboard-layout-editor.com/#/gists/8c9818afe0c2f749f4db07a7f40d7aab)<br>
 [Sense75 Layer 1](https://www.keyboard-layout-editor.com/#/gists/611d1b84910d4c6674c0a1da5812ab8d)<br>
+[Sense75 Layer 2](https://www.keyboard-layout-editor.com/#/gists/04526544d5bf32f464246ba05a999b82)<br>
 Edit the keymaps here [Github Gists](https://gist.github.com/cods4))
 ## How to flash keyboard
 https://docs.qmk.fm/newbs_getting_started#set-up-qmk
