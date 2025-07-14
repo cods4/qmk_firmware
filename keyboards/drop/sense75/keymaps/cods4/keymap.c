@@ -58,10 +58,10 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (host_keyboard_led_state().caps_lock) RGB_MATRIX_INDICATOR_SET_COLOR(3, RGB_RED);
     switch(get_highest_layer(layer_state|default_layer_state)) {
 		case 1:
-		RGB_MATRIX_INDICATOR_SET_COLOR(3, RGB_GREEN);
+		RGB_MATRIX_INDICATOR_SET_COLOR(3, 0 , 255, 0);
 		break;
 		case 2:
-		RGB_MATRIX_INDICATOR_SET_COLOR(3, RGB_BLUE);
+		RGB_MATRIX_INDICATOR_SET_COLOR(3, 0 , 0, 255);
 		break;
     }
     return false;
