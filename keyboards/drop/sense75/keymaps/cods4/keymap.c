@@ -55,7 +55,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 #endif
 
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    if (host_keyboard_led_state().caps_lock) RGB_MATRIX_INDICATOR_SET_COLOR(3, RGB_RED);
+    if (host_keyboard_led_state().caps_lock) RGB_MATRIX_INDICATOR_SET_COLOR(3,255,0,0);
     switch(get_highest_layer(layer_state|default_layer_state)) {
 		case 1:
 		RGB_MATRIX_INDICATOR_SET_COLOR(3,0,255,0);
