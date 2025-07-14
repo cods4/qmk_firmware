@@ -2,7 +2,7 @@
 
 // Override config.h in the sense75 folder
 #undef RGB_MATRIX_CYCLE_ZONES_ENABLE
-#undef RGB_MATRIX_CAPS_LOCK_INDEX 62
+#undef RGB_MATRIX_CAPS_LOCK_INDEX
 
 // Set a specific startup mode
 // A list of modes can be found in the QMK docs for "RGB Matrix Effects"
