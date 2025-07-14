@@ -53,7 +53,7 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [2] = { ENCODER_CCW_CW(_______, _______) }
 };
 #endif
-void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     
 	if (IS_HOST_LED_ON(USB_LED_CAPS_LOCK)) {
         RGB_MATRIX_INDICATOR_SET_COLOR(3, 255, 0, 0); //capslock key
