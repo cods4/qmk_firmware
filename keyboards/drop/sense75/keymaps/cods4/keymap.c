@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
 
+#define NO_LED 255
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      /*
      * ┌───┐┌───┬───┬───┬───┐┌───┬───┬───┬───┐┌───┬───┬───┬───┐┌───┐┌───┐
@@ -54,16 +56,144 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 };
 #endif
 
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    if (host_keyboard_led_state().caps_lock) RGB_MATRIX_INDICATOR_SET_COLOR(62,255,0,0);
-    switch(get_highest_layer(layer_state|default_layer_state)) {
-		case 1:
-		RGB_MATRIX_INDICATOR_SET_COLOR(32,0,255,0);
-		break;
-		case 2:
-		RGB_MATRIX_INDICATOR_SET_COLOR(32,0,0,255);
-		break;
+/**
+ * Matrix position to LED index mapping
+ * Based on keyboard.json rgb_matrix layout starting from index 13 (where matrix entries begin)
+ * 
+ * @param row Matrix row (0-5)
+ * @param col Matrix column (0-14)
+ * @return LED index (0-101) or NO_LED (255) if no LED exists for that position
+ * 
+ * Usage example:
+ *   uint8_t led_index = matrix_to_led_index(0, 0);  // Gets LED index for ESC key
+ *   if (led_index != NO_LED) {
+ *       rgb_matrix_set_color(led_index, 255, 0, 0);  // Set to red
+ *   }
+ */
+uint8_t matrix_to_led_index(uint8_t row, uint8_t col) {
+    // Matrix position lookup table - maps [row][col] to LED index
+    // -1 indicates no LED for that matrix position
+    const int8_t matrix_led_map[MATRIX_ROWS][MATRIX_COLS] = {
+        // Row 0: F-keys and top row
+        {13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, -1},  // F1-F12, PrtSc, encoder
+        // Row 1: Number row
+        {29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43},  // `1234567890-=, Backspace, Del
+        // Row 2: QWERTY top row  
+        {46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60},  // Tab, QWERTYUIOP[]|, PgUp
+        // Row 3: ASDF row
+        {62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, -1, 75},  // Caps, ASDFGHJKL;', Enter, PgDn
+        // Row 4: ZXCV row
+        {77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, -1, 89, -1},  // Shift, ZXCVBNM,./, RShift, Up
+        // Row 5: Bottom row
+        {92, 93, 94, -1, -1, 95, -1, -1, 96, 97, 98, -1, 99, 100, 101}  // Ctrl, GUI, Alt, Space, Alt, Fn, Ctrl, Left, Down, Right
+    };
+    
+    if (row >= MATRIX_ROWS || col >= MATRIX_COLS) {
+        return NO_LED;
     }
-    return false;
+    
+    int8_t led_index = matrix_led_map[row][col];
+    return (led_index == -1) ? NO_LED : (uint8_t)led_index;
 }
 
+/**
+ * Layer 1 modified keys (keys that are different from layer 0)
+ * These LED indices correspond to keys that have different functionality on layer 1
+ * Includes RGB controls, media keys, and function key modifications
+ */
+const uint8_t layer1_modified_leds[] = {
+    // Encoder (KC_MPLY instead of KC_MUTE) - no LED mapping in this case
+    42,  // QK_BOOT (Backspace position)
+    47,  // RM_TOGG (Q position)
+    48,  // RM_VALU (W position) 
+    49,  // RM_SPDU (E position)
+    50,  // RM_HUEU (R position)
+    51,  // RM_SATU (T position)
+    60,  // KC_HOME (PgUp position)
+    63,  // RM_NEXT (A position)
+    64,  // RM_VALD (S position)
+    65,  // RM_SPDD (D position)
+    66,  // RM_HUED (F position)
+    67,  // RM_SATD (G position)
+    75,  // KC_END (PgDn position)
+    83,  // NK_TOGG (N position)
+    92,  // MO(2) (LCtrl position)
+    95   // EE_CLR (Space position)
+};
+
+/**
+ * Layer 2 modified keys (keys that are different from layer 0)
+ * This layer has minimal changes - only one key different from layer 0
+ */
+const uint8_t layer2_modified_leds[] = {
+    63   // RM_NEXT (A position) - only key that's different from layer 0
+};
+
+// Array sizes
+const uint8_t layer1_modified_count = sizeof(layer1_modified_leds) / sizeof(layer1_modified_leds[0]);
+const uint8_t layer2_modified_count = sizeof(layer2_modified_leds) / sizeof(layer2_modified_leds[0]);
+
+/**
+ * Example function to highlight all modified keys for a specific layer
+ * This function should be called from within rgb_matrix_indicators_advanced_user
+ * 
+ * @param layer Layer number (1 or 2)
+ * @param r Red value (0-255)
+ * @param g Green value (0-255)
+ * @param b Blue value (0-255)
+ * @param led_min Minimum LED index to consider (from rgb_matrix_indicators_advanced_user)
+ * @param led_max Maximum LED index to consider (from rgb_matrix_indicators_advanced_user)
+ * 
+ * Usage example:
+ *   // In rgb_matrix_indicators_advanced_user function:
+ *   highlight_layer_modified_keys(1, 255, 0, 0, led_min, led_max);  // Highlight layer 1 keys in red
+ */
+void highlight_layer_modified_keys(uint8_t layer, uint8_t r, uint8_t g, uint8_t b, uint8_t led_min, uint8_t led_max) {
+    const uint8_t* modified_leds = NULL;
+    uint8_t count = 0;
+    
+    switch(layer) {
+        case 1:
+            modified_leds = layer1_modified_leds;
+            count = layer1_modified_count;
+            break;
+        case 2:
+            modified_leds = layer2_modified_leds;
+            count = layer2_modified_count;
+            break;
+        default:
+            return;
+    }
+    
+    for (uint8_t i = 0; i < count; i++) {
+        uint8_t led_index = modified_leds[i];
+        if (led_index >= led_min && led_index < led_max) {
+            rgb_matrix_set_color(led_index, r, g, b);
+        }
+    }
+}
+
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    // Caps lock indicator - red light on caps lock key
+    if (host_keyboard_led_state().caps_lock) {
+        RGB_MATRIX_INDICATOR_SET_COLOR(62, 255, 0, 0);
+    }
+    
+    // Layer-based lighting
+    uint8_t current_layer = get_highest_layer(layer_state | default_layer_state);
+    switch(current_layer) {
+        case 1:
+            // Layer 1: Light up all modified keys in blue
+            highlight_layer_modified_keys(1, 0, 0, 255, led_min, led_max);
+            break;
+        case 2:
+            // Layer 2: Light up all modified keys in green
+            highlight_layer_modified_keys(2, 0, 255, 0, led_min, led_max);
+            break;
+        default:
+            // Layer 0: No special lighting (default behavior)
+            break;
+    }
+    
+    return false;
+}
