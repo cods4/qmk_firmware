@@ -53,9 +53,11 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [2] = { ENCODER_CCW_CW(_______, _______) }
 };
 #endif
-RGB_MATRIX_INDICATOR_SET_COLOR(3,0,255,0);
-RGB_MATRIX_INDICATOR_SET_COLOR(6,0,255,0);
-RGB_MATRIX_INDICATOR_SET_COLOR(32,0,255,0);
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    RGB_MATRIX_INDICATOR_SET_COLOR(3,0,255,0);
+    RGB_MATRIX_INDICATOR_SET_COLOR(6,0,255,0);
+    RGB_MATRIX_INDICATOR_SET_COLOR(32,0,255,0);
+}
 
 /*bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 *    if (host_keyboard_led_state().caps_lock) RGB_MATRIX_INDICATOR_SET_COLOR(3,255,0,0);
