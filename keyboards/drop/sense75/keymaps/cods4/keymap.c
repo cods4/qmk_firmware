@@ -53,23 +53,17 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [2] = { ENCODER_CCW_CW(_______, _______) }
 };
 #endif
+
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    RGB_MATRIX_INDICATOR_SET_COLOR(3,255,0,0);
-    RGB_MATRIX_INDICATOR_SET_COLOR(6,0,255,0);
-    RGB_MATRIX_INDICATOR_SET_COLOR(32,0,0,255);
+    if (host_keyboard_led_state().caps_lock) RGB_MATRIX_INDICATOR_SET_COLOR(32,255,0,0);
+    switch(get_highest_layer(layer_state|default_layer_state)) {
+		case 1:
+		RGB_MATRIX_INDICATOR_SET_COLOR(32,0,255,0);
+		break;
+		case 2:
+		RGB_MATRIX_INDICATOR_SET_COLOR(32,0,0,255);
+		break;
+    }
     return false;
 }
 
-/*bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-*    if (host_keyboard_led_state().caps_lock) RGB_MATRIX_INDICATOR_SET_COLOR(3,255,0,0);
-*    switch(get_highest_layer(layer_state|default_layer_state)) {
-*		case 1:
-*		RGB_MATRIX_INDICATOR_SET_COLOR(3,0,255,0);
-*		break;
-*		case 2:
-*		RGB_MATRIX_INDICATOR_SET_COLOR(3,0,0,255);
-*		break;
-*    }
-*    return false;
-*}
-*/
