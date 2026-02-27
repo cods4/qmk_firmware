@@ -62,3 +62,43 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,            _______,  _______,  _______,  _______,  _______,  NK_TOGG,  _______,  _______,  _______,  _______,              _______,            _______,
         _______,  GU_TOGG,  _______,                                _______,                                _______,  _______,  _______,    _______,  _______,  _______,  _______ ),
 };
+
+bool led_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    // Caps lock indicator
+    if (host_keyboard_led_state().caps_lock) {
+        uint8_t caps_led = g_led_config.matrix_co[3][0];
+        if (caps_led != NO_LED && caps_led >= led_min && caps_led < led_max) {
+            led_matrix_set_value(caps_led, 255);
+        }
+    }
+
+    uint8_t current_layer = get_highest_layer(layer_state);
+    uint8_t base_layer = MAC_BASE;
+
+    if (layer_state_cmp(default_layer_state, WIN_BASE)) {
+        base_layer = WIN_BASE;
+    }
+
+    if (current_layer == MAC_FN || current_layer == WIN_FN) {
+        // Dim the board
+        for (uint8_t i = led_min; i < led_max; i++) {
+            led_matrix_set_value(i, 20);
+        }
+
+        // Highlight modified keys using the keymap arrays
+        for (uint8_t r = 0; r < MATRIX_ROWS; r++) {
+            for (uint8_t c = 0; c < MATRIX_COLS; c++) {
+                uint16_t key = pgm_read_word(&keymaps[current_layer][r][c]);
+                uint16_t base_key = pgm_read_word(&keymaps[base_layer][r][c]);
+                if (key != KC_TRNS && key != base_key) {
+                    uint8_t led_index = g_led_config.matrix_co[r][c];
+                    if (led_index != NO_LED && led_index >= led_min && led_index < led_max) {
+                        led_matrix_set_value(led_index, 255);
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
